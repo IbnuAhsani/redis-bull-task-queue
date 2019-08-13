@@ -1,6 +1,8 @@
 const RedisSMQ = require("rsmq");
 const rsmq = new RedisSMQ( {host: "127.0.0.1", port: 6379, ns: "rsmq"} );
 
+const delay = ms => new Promise(_ => setTimeout(_, ms));
+
 function main() {
 	const queuename = "testqueue";
 
@@ -27,10 +29,20 @@ function receiveMessageLoop(queuename) {
 	// check for new messages every second
 	setInterval(() => {
 		// alternative to receiveMessage would be popMessage => receives the next message from the queue and deletes it.
-		rsmq.receiveMessage({ qname: queuename }, (err, resp) => {
+		rsmq.receiveMessage({ qname: queuename }, async (err, resp) => {
 			if (err) {
 				console.error(err);
 				return;
+			}
+
+			if(resp.message === 'direct-message'){
+				console.log('direct-message received')
+			}
+			
+			// delay the delayed-message for 5 seconds
+			if(resp.message === 'delayed-message'){
+				await delay(5000);
+				console.log('delayed-message received')
 			}
 
 			// checks if a message has been received
