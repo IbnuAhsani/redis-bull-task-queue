@@ -1,17 +1,17 @@
-const Queue = require('bee-queue')
+const Queue = require('bee-queue');
 
 const QUEUE_NAME = 'bee-queue';
 
 const produce = async () => {
-    const queue = new Queue(QUEUE_NAME);
+  const queue = new Queue(QUEUE_NAME);
 
-    const job = await queue.createJob({message: 'delayed'}).save();
+  const job = await queue.createJob({ message: 'delayed' }).save();
 
-    if(job){
-        console.log('delayed job is added to queue..')
-    }
+  if (job) {
+    console.log('delayed job is added to queue..');
+  }
 
-    process.exit();
-}
+  process.exit();
+};
 
 produce();
